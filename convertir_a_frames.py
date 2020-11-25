@@ -12,9 +12,24 @@ destino = './SALIDAS/marcha_347.csv'
 t = TrackElan(filename)
 df = t.data_frame  # obtiene los datos en Pandas DataFrame
 fps = 24  # frames por segundo del video
-# print(df)
 
-# print(df)
+def asigna_categ(new_df, df, fps):
+
+    for i in range(len(df)):
+        c = df['categ'][i]
+        s = df['start'][i]
+        e = df['end'][i]
+
+        s_fps = round(s * fps)
+        e_fps = round(e * fps)
+
+        for j in range(len(new_df)):
+            if s_fps <= new_df['Frames'][j] < e_fps:
+                new_df['Categ'][j] == c
+
+    # print(new_df)
+    return new_df
+
 
 # convertir a frame-by-frame
 # Frame | Time | Categ
@@ -34,24 +49,9 @@ categ = ['Nada'] * (rango+1)
 arreglo_inicial = [frames, vec_time, categ]
 new_df = pd.DataFrame(arreglo_inicial, index=['Frames', 'Time', 'Categ']).transpose()
 
-
-for i in range(len(df)):
-    star = df['start'][i]
-    fin = df['end'][i]
-    cat = df['categ'][i]
-
-    for j in range(len(new_df)):
-
-        if star <= new_df['Time'][j] < fin:
-
-            new_df['Categ'][j] == cat
-
-# NUEVA MODIFICACION
-
-
-new_df.to_csv(destino)
-
-
+df_ready = asigna_categ(new_df, df, fps)
+            
+df_ready.to_csv(destino)
 
 
 # imprimir nuevo DataFrame (ver ejemplo en target)
