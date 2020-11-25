@@ -46,6 +46,8 @@ for i in range(len(df)):
 
             new_df['Categ'][j] == cat
 
+# NUEVA MODIFICACION
+
 
 new_df.to_csv(destino)
 
