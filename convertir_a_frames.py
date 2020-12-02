@@ -3,7 +3,6 @@ from pathlib import Path
 from datafiles import TrackElan
 import numpy as np
 
-
 pd.set_option('display.max_columns', 500)
 
 filename = Path('./ENTRADAS/marcha_347.txt')
@@ -23,34 +22,36 @@ def asigna_categ(new_df, df, fps):
         s_fps = round(s * fps)
         e_fps = round(e * fps)
 
-        for j in range(len(new_df)):
-            if s_fps <= new_df['Frames'][j] < e_fps:
-                new_df['Categ'][j] == c
+        print(str(s_fps) + ' ' + str(e_fps) + ' ' + c)
 
-    # print(new_df)
+        new_df.loc[s_fps:e_fps, 'Categ'] = c
+
+        # for j in range(len(new_df)):
+        #     if s_fps <= new_df['Frames'][j] < e_fps:
+        #         new_df['Categ'][j] == c
+
+
     return new_df
-
 
 # convertir a frame-by-frame
 # Frame | Time | Categ
 
 # Busca el tiempo final
 index_final = len(df) -1
-tiempo_final = df['end'][index_final]
+tiempo_final = df['end'].max()
 
 # Arma vectores de Frames, Tiempo y Categ (vec de Nones)
-rango = round(tiempo_final * fps)
-frames = np.arange(0,rango+1)
+rango = int(np.ceil(tiempo_final * fps))
+frames = np.arange(0,rango)
 vec_time = []
-for samp in range(rango+1):
+for samp in range(rango):
     vec_time.append(round(samp / fps, 3))
-categ = ['Nada'] * (rango+1)
+categ = ['Nada'] * (rango)
 
 arreglo_inicial = [frames, vec_time, categ]
 new_df = pd.DataFrame(arreglo_inicial, index=['Frames', 'Time', 'Categ']).transpose()
 
 df_ready = asigna_categ(new_df, df, fps)
-            
 df_ready.to_csv(destino)
 
 
